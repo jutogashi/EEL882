@@ -274,15 +274,17 @@ if(Show==1){
 var i_line=0;
 var i_x;
 var i_y;
+var i_a;
+var i_b;
 while(i_line<lines.length){
     var i_pol=0;
     while(i_pol<polygons.length){
         var i_points=0;
         while(i_points<polygons[i_pol].length-1){
           
-            var i_a=(polygons[i_pol][i_points][1]-polygons[i_pol][i_points+1][1])/(polygons[i_pol][i_points][0]-polygons[i_pol][i_points+1][0]);
+            i_a=(polygons[i_pol][i_points][1]-polygons[i_pol][i_points+1][1])/(polygons[i_pol][i_points][0]-polygons[i_pol][i_points+1][0]);
           
-            var i_b=polygons[i_pol][i_points][1]-(i_a*polygons[i_pol][i_points][0]);
+            i_b=polygons[i_pol][i_points][1]-(i_a*polygons[i_pol][i_points][0]);
             if(coe_a[i_line]!=i_a){
                  i_x=(i_b-coe_b[i_line])/(coe_a[i_line]-i_a);
                  if(lines[i_line][0][0]==lines[i_line][1][0]){
@@ -295,13 +297,13 @@ while(i_line<lines.length){
                  if(lines[i_line][0][1]<lines[i_line][1][1]){
                    if(lines[i_line][0][1]<i_y){
                    curr_int.push([i_x,i_y,i_pol]);
-                   ellipse(i_x, i_y, 6, 6);
+                   //ellipse(i_x, i_y, 6, 6);
                    }
                  }
                 else if(lines[i_line][0][1]>lines[i_line][1][1]) {
                    if(lines[i_line][0][1]>i_y){
                    curr_int.push([i_x,i_y,i_pol]);
-                   ellipse(i_x, i_y, 6, 6);
+                   //ellipse(i_x, i_y, 6, 6);
                    }
                  }
                  else{
@@ -309,20 +311,21 @@ while(i_line<lines.length){
                    if(lines[i_line][0][0]<lines[i_line][1][0]){
                       if(lines[i_line][0][0]<i_x){
                    curr_int.push([i_x,i_y,i_pol]);
-                   ellipse(i_x, i_y, 6, 6);
+                   //ellipse(i_x, i_y, 6, 6);
                    }
 
                       }
                    else{
                     if(lines[i_line][0][0]>i_x){
                    curr_int.push([i_x,i_y,i_pol]);
-                   ellipse(i_x, i_y, 6, 6);
+                   //ellipse(i_x, i_y, 6, 6);
                    }
                  } 
                  }  
                  }
             }
-          
+             i_points++;
+        }
             i_a=(polygons[i_pol][polygons[i_pol].length-1][1]-polygons[i_pol][0][1])/(polygons[i_pol][polygons[i_pol].length-1][0]-polygons[i_pol][0][0]);
           
             i_b=polygons[i_pol][polygons[i_pol].length-1][1]-(i_a*polygons[i_pol][polygons[i_pol].length-1][0]);
@@ -338,41 +341,113 @@ while(i_line<lines.length){
                  if(lines[i_line][0][1]<lines[i_line][1][1]){
                    if(lines[i_line][0][1]<i_y){
                    curr_int.push([i_x,i_y,i_pol]);
-                   ellipse(i_x, i_y, 6, 6);
+                   //ellipse(i_x, i_y, 6, 6);
                    }
                  }
                 else if(lines[i_line][0][1]>lines[i_line][1][1]) {
                    if(lines[i_line][0][1]>i_y){
                    curr_int.push([i_x,i_y,i_pol]);
-                   ellipse(i_x, i_y, 6, 6);
+                   //ellipse(i_x, i_y, 6, 6);
                    }
                  }
                  else{
                    if(lines[i_line][0][0]<lines[i_line][1][0]){
                       if(lines[i_line][0][0]<i_x){
                    curr_int.push([i_x,i_y,i_pol]);
-                   ellipse(i_x, i_y, 6, 6);
+                   //ellipse(i_x, i_y, 6, 6);
                    }
                       }
                    else{
                     if(lines[i_line][0][0]>i_x){
                    curr_int.push([i_x,i_y,i_pol]);
-                   ellipse(i_x, i_y, 6, 6);
+                   //ellipse(i_x, i_y, 6, 6);
                    }
                  } 
                  }
                  }
             }
             
-            inter[i_line]=curr_int;
-            curr_int=[];
-            i_points++;
-        }
+        
         i_pol++;
     }
+    inter[i_line]=curr_int;
+    curr_int=[];
     i_line++;
 }
 
+//COLOR POINTS
+var kpt=[];
+var kdist=[]
+var rb;
+var ki=0;
+while(ki<inter.length)
+{  
+    var kk=0;
+    while(kk<polygons.length)
+    {
+        var kj=0;
+        while(kj<inter[ki].length)
+        {
+            if (inter[ki][kj][2]==kk)
+            {
+                kpt.push([inter[ki][kj][0],inter[ki][kj][1]]);
+                kdist.push(dist(inter[ki][kj][0],inter[ki][kj][1],lines[ki][0][0],lines[ki][0][1]));
+
+            }
+            kj++;
+
+        }
+        if(kdist.length%2==0)
+        {
+            rb=0;
+        }
+        else
+        {
+            rb=1;
+        }
+
+        var km=0;
+        while(km<kdist.length)
+        {    
+            var kn=0;
+            var mindist=(width**2+height**2);
+            var minn;
+            while(kn<kdist.length)
+            {
+            if(mindist>kdist[kn])
+            {
+              mindist=kdist[kn];
+              minn=kn;
+            }
+            kn++;
+            }
+            kdist[minn]=(width**2+height**2);
+            if(rb==0)
+            {
+                fill(0,0,255);
+            }
+            else
+            {
+                fill(255,0,0);
+            }
+            ellipse(kpt[minn][0],kpt[minn][1],6,6);
+            if(rb==0)
+            {
+                rb=1;
+            }
+            else
+            {
+                rb=0;
+            }
+
+            km++;
+        }
+        kdist=[];
+        kpt=[];
+        kk++;
+    }
+    ki++;
+}
 
   
   
