@@ -1,5 +1,5 @@
 var State=0;
-
+var Show=0;
 
 function setup() {
 createCanvas(1000,600);
@@ -30,10 +30,16 @@ if (keyCode === 53) {
 }
 //INTERCEPTION
 if (keyCode === 54) {
-    State = 6;
+    if (Show==0){
+    Show=1;
+    }
+    else{
+    Show =0;
+    }
+
 }
 if (keyCode === 55) {
-    State = 7;
+  State = 7;
 }  
 }
 
@@ -264,7 +270,7 @@ while(t<lines.length){
   
 
 //INTERCEPTION
-if(State==6){
+if(Show==1){
 var i_line=0;
 var i_x;
 var i_y;
@@ -299,14 +305,16 @@ while(i_line<lines.length){
                    }
                  }
                  else{
+                   
                    if(lines[i_line][0][0]<lines[i_line][1][0]){
-                      if(lines[i_line][0][0]>i_x){
+                      if(lines[i_line][0][0]<i_x){
                    curr_int.push([i_x,i_y,i_pol]);
                    ellipse(i_x, i_y, 6, 6);
                    }
+
                       }
                    else{
-                    if(lines[i_line][0][0]<i_x){
+                    if(lines[i_line][0][0]>i_x){
                    curr_int.push([i_x,i_y,i_pol]);
                    ellipse(i_x, i_y, 6, 6);
                    }
@@ -341,13 +349,13 @@ while(i_line<lines.length){
                  }
                  else{
                    if(lines[i_line][0][0]<lines[i_line][1][0]){
-                      if(lines[i_line][0][0]>i_x){
+                      if(lines[i_line][0][0]<i_x){
                    curr_int.push([i_x,i_y,i_pol]);
                    ellipse(i_x, i_y, 6, 6);
                    }
                       }
                    else{
-                    if(lines[i_line][0][0]<i_x){
+                    if(lines[i_line][0][0]>i_x){
                    curr_int.push([i_x,i_y,i_pol]);
                    ellipse(i_x, i_y, 6, 6);
                    }
@@ -408,12 +416,12 @@ var d_points=0;
                  }
                  else{
                    if(drag[0][0]<drag[1][0]){
-                      if(drag[0][0]>drag_x){
+                      if(drag[0][0]<drag_x){
                       i_cnt[d_pol]++;
                    }
                       }
                    else{
-                    if(drag[0][0]<drag_x){
+                    if(drag[0][0]>drag_x){
                     i_cnt[d_pol]++;
                    }
                  } 
@@ -438,12 +446,12 @@ var d_points=0;
                  }
                  else{
                    if(drag[0][0]<drag[1][0]){
-                      if(drag[0][0]>drag_x){
+                      if(drag[0][0]<drag_x){
                       i_cnt[d_pol]++;
                    }
                       }
                    else{
-                    if(drag[0][0]<drag_x){
+                    if(drag[0][0]>drag_x){
                     i_cnt[d_pol]++;
                    }
                  } 
