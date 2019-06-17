@@ -36,6 +36,9 @@
 
 			var light;
 
+
+			var group = new THREE.Group();
+
 			init();
 			animate();
 
@@ -57,7 +60,7 @@
 
 				scene.add( new THREE.AmbientLight( 0xeeeeee ) );
 
-				light = new THREE.SpotLight( 0x222222, 1.5 );
+				light = new THREE.SpotLight( 0x444444, 1.5 );
 				light.position.set( 0, 500, 2000 );
 				light.angle = Math.PI / 9;
 
@@ -90,11 +93,15 @@
 					object.castShadow = true;
 					object.receiveShadow = true;
 
-					scene.add( object );
+					//scene.add( object );
 
 					objects.push( object );
 
+					group.add(object);
+
 				}
+
+				scene.add(group);
 
 				raycaster = new THREE.Raycaster();
 
@@ -203,7 +210,6 @@
 
 					var intersects = raycaster.intersectObjects( esfera );
 					
-
 					if ( intersects.length > 0 ) {
 
 						pt = intersects[0].point;
@@ -225,17 +231,18 @@
 						var v2 =new THREE.Vector3( pt.x -vector.x, pt.y-vector.y, pt.z-vector.z )
 						quaternion1.setFromUnitVectors( v1.normalize(), v2.normalize());
 
-
 						if (state==1){
 
-							esfera[0].applyQuaternion( quaternion1 );
+							//esfera[0].applyQuaternion( quaternion1 );
 							I.applyQuaternion( quaternion1 );
 						}
 						else if (state==2){
 
-							scene.applyQuaternion( quaternion1 );
+							console.log(group.children);
+							//esfera[0].applyQuaternion( quaternion1 );
+							group.applyQuaternion( quaternion1 );
+							console.log(group.children);
 							
-				
 						}
 					}
 
@@ -259,7 +266,7 @@
 
 						if (state==1){
 
-							esfera[0].applyQuaternion( quaternion );
+							//esfera[0].applyQuaternion( quaternion );
 							I.applyQuaternion( quaternion );
 
 
@@ -267,8 +274,8 @@
 						}
 						else if (state==2){
 
-
-							scene.applyQuaternion( quaternion );
+							//esfera[0].applyQuaternion( quaternion );
+							group.applyQuaternion( quaternion );
 							
 						}
 					}
@@ -279,7 +286,7 @@
 
 
 
-			var dragControls = new THREE.DragControls( objects, camera, renderer.domElement );
+			var dragControls = new THREE.DragControls( group.children, camera, renderer.domElement );
 
 			var I;
 			var esfera =[]
@@ -290,7 +297,7 @@
 				
 				raycaster.setFromCamera( mouse, camera );
 
-				var intersects = raycaster.intersectObjects( objects );
+				var intersects = raycaster.intersectObjects( group.children);
 
 				if ( intersects.length > 0 ) {
 
@@ -305,9 +312,13 @@
 						scene.remove(selectedObject);
 
 						I = intersects[ 0 ].object;
-						var x = I.position.x;
-						var y = I.position.y;
-						var z = I.position.z;
+
+						var v = new THREE.Vector3();
+						v.setFromMatrixPosition( I.matrixWorld );
+
+						var x = v.x;
+						var y = v.y;
+						var z = v.z;
 
 						var r = 40*Math.max(I.scale.x, I.scale.y,I.scale.z) +5;
 
@@ -365,14 +376,17 @@
 					var y_min=1E+12
 					var z_min=1E+12;
 
+
 					for ( var i = 0; i < 10; i ++ ) {
 						o = objects[i];
-						if(o.position.x >x_max) x_max=o.position.x;
-						if(o.position.y >y_max) y_max=o.position.y;
-						if(o.position.z >z_max) z_max=o.position.z;
-						if(o.position.x <x_min) x_min=o.position.x;
-						if(o.position.y <y_min) y_min=o.position.y;
-						if(o.position.z <z_min) z_min=o.position.z;
+						var v = new THREE.Vector3();
+						v.setFromMatrixPosition( o.matrixWorld );
+						if(v.x >x_max) x_max=v.x;
+						if(v.y >y_max) y_max=v.y;
+						if(v.z >z_max) z_max=v.z;
+						if(v.x <x_min) x_min=v.x;
+						if(v.y <y_min) y_min=v.y;
+						if(v.z <z_min) z_min=v.z;
 					}
 
 					var s_r = Math.max((x_max-x_min),(y_max-y_min),(z_max-z_min));
